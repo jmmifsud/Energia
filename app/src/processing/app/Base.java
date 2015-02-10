@@ -70,6 +70,7 @@ public class Base {
     archMap.put("lm4f", "lm4f");
     archMap.put("c2000", "c2000");
     archMap.put("cc3200", "cc3200");
+    archMap.put("rmxx", "rmxx");								// JMM1 02-10-2015
   }
   static Platform platform;
 
@@ -259,6 +260,8 @@ public class Base {
     	targetLibDir = "hardware/c2000/";
     else if (Preferences.get("target").equals("cc3200")) 
     	targetLibDir = "hardware/cc3200/";
+    else if (Preferences.get("target").equals("rmxx")) 						// JMM1 02-10-2015
+    	targetLibDir = "hardware/rmxx/";							// JMM1 02-10-2015
     librariesFolder = getContentFile(targetLibDir + "libraries");
     toolsFolder = getContentFile("tools");
 
@@ -1103,6 +1106,8 @@ public class Base {
             		  targetLibDir = "hardware/c2000/";
 		  else if(n.equals("cc3200")) 
             		  targetLibDir = "hardware/cc3200/";
+		  else if(n.equals("rmxx")) 								// JMM1 02-10-2015
+            		  targetLibDir = "hardware/rmxx/";						// JMM1 02-10-2015
             	  librariesFolder = getContentFile(targetLibDir + "libraries");
             	  onArchChanged();
               }
@@ -1670,6 +1675,14 @@ public class Base {
 	    }
 	    return path;
 	  }
+  static public String getRMXXBasePath() {								//JMM1 02-10-2015
+	    String path = getHardwarePath() + File.separator + "tools" +				//JMM1 02-10-2015
+	                  File.separator + "rmxx" + File.separator + "bin" + File.separator;		//JMM1 02-10-2015
+	    if (Base.isLinux() && !(new File(path)).exists()) {						//JMM1 02-10-2015
+	      return "";  // use lm4f-gcc and mspdebug in PATH instead of platform version		//JMM1 02-10-2015
+	    }												//JMM1 02-10-2015
+	    return path;										//JMM1 02-10-2015
+	  }												//JMM1 02-10-2015
 
 
   //TODO: check tools path
@@ -1744,6 +1757,10 @@ public class Base {
           String hwPath = getC2000BasePath();
           return hwPath;
       }
+      else if (getArch() == "rmxx") {									//JMM1 02-10-2015
+          String hwPath = getRMXXBasePath();								//JMM1 02-10-2015
+          return hwPath;										//JMM1 02-10-2015
+      }													//JMM1 02-10-2015
       else {
         return getHardwarePath() + File.separator + "tools" + File.separator
           + getArch() + File.separator + "bin" + File.separator;
